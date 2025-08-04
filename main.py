@@ -33,6 +33,11 @@ def robots_dot_txt():
     return "User-agent: *\nDisallow: /"
 
 
+@app.route('/', methods=['GET'])
+def home():
+    return "<h1>PGS Catalog metadata validator</h1><p>This service validates the Metadata files schema and content.</p>"
+
+
 def add_report_error(depositon_report: dict, report: dict):
     for spreadsheet in report:
         errors = []
