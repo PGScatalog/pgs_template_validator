@@ -3,6 +3,7 @@ from flask_cors import CORS
 import io
 import os
 from validator.main_validator import PGSMetadataValidator
+import logging
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -49,15 +50,28 @@ def add_report_error(depositon_report: dict, report: dict):
 @app.route('/validate_metadata', methods=['POST'])
 def validate_metadata():
     file = request.files['file']
-    bin_file = io.BytesIO(file.read())
-    metadata_validator = PGSMetadataValidator(bin_file, False)
-    metadata_validator.parse_spreadsheets()
-    metadata_validator.parse_publication()
-    metadata_validator.parse_scores()
-    metadata_validator.parse_cohorts()
-    metadata_validator.parse_performances()
-    metadata_validator.parse_samples()
-    metadata_validator.post_parsing_checks()
+
+    try:
+        bin_file = io.BytesIO(file.read())
+        metadata_validator = PGSMetadataValidator(bin_file, False)
+        metadata_validator.parse_spreadsheets()
+        metadata_validator.parse_publication()
+        metadata_validator.parse_scores()
+        metadata_validator.parse_cohorts()
+        metadata_validator.parse_performances()
+        metadata_validator.parse_samples()
+        metadata_validator.post_parsing_checks()
+    except Exception as e:
+        logging.getLogger(__name__).error(str(e))
+        return jsonify({
+            "valid": False,
+            "errorMessages": {
+                "Undefined": [
+                    'Unexpected error in input file.'
+                ]
+            },
+            "warningMessages": {}
+        })
 
     valid = True
     public_error_report = {}
