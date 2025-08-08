@@ -62,6 +62,7 @@ def validate_metadata():
         metadata_validator.parse_spreadsheets()
         metadata_validator.parse_publication()
         metadata_validator.parse_scores()
+        score_names = list(metadata_validator.parsed_scores.keys())
         metadata_validator.parse_cohorts()
         metadata_validator.parse_performances()
         metadata_validator.parse_samples()
@@ -93,7 +94,8 @@ def validate_metadata():
     response = {
         "valid": valid,
         "errorMessages": public_error_report,
-        "warningMessages": public_warning_report
+        "warningMessages": public_warning_report,
+        "scoreNames": score_names,
     }
 
     return jsonify(response)
