@@ -368,7 +368,7 @@ class PGSMetadataValidator():
             performance_check_report = performance.check_data(self.fields_infos[spread_sheet_name], self.mandatory_fields[spread_sheet_name])
             self.add_check_report(spread_sheet_name, row_id, performance_check_report)
 
-            performance_id = parsed_performance['score_name']+'__'+parsed_performance['sampleset']
+            performance_id = str(parsed_performance['score_name'])+'__'+str(parsed_performance['sampleset'])
             self.parsed_performances[performance_id] = performance
 
             # Metrics data
